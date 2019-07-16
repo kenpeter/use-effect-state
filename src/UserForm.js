@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { withFormik } from 'formik';
 //import Yup from 'yup';
 import * as Yup from 'yup';
 import VirtualizedSelect from 'react-virtualized-select';
@@ -74,7 +74,7 @@ const UserForm = (props) => {
   );
 }
 
-export default Formik({
+export default withFormik({
   mapPropsToValues: (props) => ({ 
     email: props.user.email,
     username: props.user.username,
@@ -82,7 +82,10 @@ export default Formik({
   }),
 
   validationSchema: Yup.object().shape({
+    // get through this
     email: Yup.string().email('Invalid email address').required('Email is required!'),
+
+    // also get through this, then can submit
     username: Yup.string().required('This man needs a ${path}').when('email', (email, schema) => {
       if (email === 'foobar@example.com') { 
         return schema.label('papidipupi').min(10);
@@ -96,6 +99,7 @@ export default Formik({
       // submit them do the server. do whatever you like!
       alert(JSON.stringify(values, null, 2));
       setSubmitting(false);
+      console.log('done')
     }, 1000);
   },
 })(UserForm);
