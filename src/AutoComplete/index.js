@@ -1,50 +1,19 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import {SearchInput, SearchUL, SearchLI} from './index.style';
-
-/*
-
-//setup before functions
-
-// timer id
-var typingTimer;     
-// 5s stop           
-var doneTypingInterval = 5000;  //time in ms, 5 second for example
-// search input
-var $input = $('#myInput');
-
-// key up
-$input.on('keyup', function () {
-  // clear old timer
-  clearTimeout(typingTimer);
-  // set new timer, callback, 5s time
-  typingTimer = setTimeout(doneTyping, doneTypingInterval);
-});
-
-// key press
-$input.on('keydown', function () {
-  // clear old timer id
-  clearTimeout(typingTimer);
-});
-
-//user is "finished typing," do something
-function doneTyping () {
-  //do something
-}
-
-*/
 
 const Autocomplete = ({suggestions = []}) => {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [userInput, setUserInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   // timer id
   let typingTimer;
   //
   let doneTypingInterval = 1000;
 
+  // on change
   const onChange = e => {
     // input
     const userInput = e.currentTarget.value;
@@ -62,6 +31,7 @@ const Autocomplete = ({suggestions = []}) => {
     setUserInput(e.currentTarget.value);
   };
 
+  // onclick
   const onClick = e => {
     // set state
     setActiveSuggestion(0);
@@ -73,6 +43,7 @@ const Autocomplete = ({suggestions = []}) => {
   // done
   const doneTyping = () => {
     console.log('done type');
+    setIsTyping(false);
   };
 
   // key down
@@ -111,6 +82,7 @@ const Autocomplete = ({suggestions = []}) => {
 
     // has val, then clean up
     if (e.currentTarget.value) {
+      setIsTyping(true);
       typingTimer = setTimeout(doneTyping, doneTypingInterval);
     }
   };
@@ -151,6 +123,7 @@ const Autocomplete = ({suggestions = []}) => {
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
         value={userInput}
+        isTyping={isTyping}
       />
       {suggestionsListComponent}
     </>
