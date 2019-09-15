@@ -101,8 +101,6 @@ const Autocomplete = ({suggestions = []}) => {
       // go down +1
       setActiveSuggestion(activeSuggestion + 1);
     } else {
-      // else other keys, assume typing
-      clearTimeout(typingTimer);
     }
   };
 
@@ -110,8 +108,11 @@ const Autocomplete = ({suggestions = []}) => {
   const onKeyUp = e => {
     // clear old timer
     clearTimeout(typingTimer);
-    // set new timer, callback, done time
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+
+    // has val, then clean up
+    if (e.currentTarget.value) {
+      typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    }
   };
 
   // tmp: sugList
