@@ -1,11 +1,49 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
+import {SearchInput, SearchUL, SearchLI} from './index.style';
+
+/*
+
+//setup before functions
+
+// timer id
+var typingTimer;     
+// 5s stop           
+var doneTypingInterval = 5000;  //time in ms, 5 second for example
+// search input
+var $input = $('#myInput');
+
+// key up
+$input.on('keyup', function () {
+  // clear old timer
+  clearTimeout(typingTimer);
+  // set new timer, callback, 5s time
+  typingTimer = setTimeout(doneTyping, doneTypingInterval);
+});
+
+// key press
+$input.on('keydown', function () {
+  // clear old timer id
+  clearTimeout(typingTimer);
+});
+
+//user is "finished typing," do something
+function doneTyping () {
+  //do something
+}
+
+*/
 
 const Autocomplete = ({suggestions = []}) => {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [userInput, setUserInput] = useState('');
+
+  // timer id
+  let typingTimer;
+  //
+  let doneTypingInterval = 1000;
 
   const onChange = e => {
     // input
@@ -32,31 +70,48 @@ const Autocomplete = ({suggestions = []}) => {
     setUserInput(e.currentTarget.innerText); //?
   };
 
+  // done
+  const doneTyping = () => {
+    console.log('done type');
+  };
+
+  // key down
   const onKeyDown = e => {
-    // enter
     if (e.keyCode === 13) {
+      // 1. enter key
       // state
       setActiveSuggestion(0);
       setShowSuggestions(false);
       setUserInput(filteredSuggestions[activeSuggestion]);
     } else if (e.keyCode === 38) {
-      // up arrow
+      // 2. up arrow key
       // no active, out
       if (activeSuggestion === 0) {
         return;
       }
 
-      // -1
+      // go up, -1
       setActiveSuggestion(activeSuggestion - 1);
     } else if (e.keyCode === 40) {
-      // down arr
+      // 3. down arr
       if (activeSuggestion - 1 === filteredSuggestions.length) {
         return;
       }
 
-      // +1
+      // go down +1
       setActiveSuggestion(activeSuggestion + 1);
+    } else {
+      // else other keys, assume typing
+      clearTimeout(typingTimer);
     }
+  };
+
+  // key up
+  const onKeyUp = e => {
+    // clear old timer
+    clearTimeout(typingTimer);
+    // set new timer, callback, done time
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
   };
 
   // tmp: sugList
@@ -67,15 +122,15 @@ const Autocomplete = ({suggestions = []}) => {
     if (filteredSuggestions.length) {
       // ul + li
       suggestionsListComponent = (
-        <ul>
+        <SearchUL>
           {filteredSuggestions.map((suggestion, index) => {
             return (
-              <li key={suggestion} onClick={onClick}>
+              <SearchLI key={suggestion} onClick={onClick}>
                 {suggestion}
-              </li>
+              </SearchLI>
             );
           })}
-        </ul>
+        </SearchUL>
       );
     } else {
       // no
@@ -89,10 +144,11 @@ const Autocomplete = ({suggestions = []}) => {
 
   return (
     <>
-      <input
+      <SearchInput
         type="text"
         onChange={onChange}
         onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
         value={userInput}
       />
       {suggestionsListComponent}
