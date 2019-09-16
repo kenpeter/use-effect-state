@@ -134,7 +134,7 @@ const Autocomplete = ({suggestions = []}) => {
         onKeyUp={onKeyUp}
         value={userInput}
         isTyping={isTyping}
-        onBlur={onBlur}
+        //onBlur={onBlur}
       />
       {suggestionsListComponent}
     </>
