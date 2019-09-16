@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {SearchInput, SearchUL, SearchLI} from './index.style';
 
+// based on this: https://programmingwithmosh.com/react/simple-react-autocomplete-component/
 const Autocomplete = ({suggestions = []}) => {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
@@ -38,6 +39,8 @@ const Autocomplete = ({suggestions = []}) => {
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setUserInput(e.currentTarget.innerText); //?
+
+    console.log('on click');
   };
 
   // done
@@ -115,6 +118,13 @@ const Autocomplete = ({suggestions = []}) => {
     }
   }
 
+  // --------
+  // NOTE: this makes the drop down list disappear, but not able to click the list
+  // --------
+  const onBlur = () => {
+    setShowSuggestions(false);
+  };
+
   return (
     <>
       <SearchInput
@@ -124,6 +134,7 @@ const Autocomplete = ({suggestions = []}) => {
         onKeyUp={onKeyUp}
         value={userInput}
         isTyping={isTyping}
+        onBlur={onBlur}
       />
       {suggestionsListComponent}
     </>
