@@ -1,8 +1,4 @@
-import React from 'react';
-
-function MenuItem() {
-  return <>menuItem</>;
-}
+import React, {useState, useEffect, useRef, createRef} from 'react';
 
 function Menu({buttonName}) {
   const menuItems = {download: 'download', view: 'view', delete: 'delete'};
@@ -57,6 +53,11 @@ function TableElement() {
 }
 
 function App() {
+  const [open, setOpen] = useState(false);
+  const [uniqueKey, setUniqueKey] = useState('');
+  // active index is 0
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <>
       <TableElement />
