@@ -1,4 +1,25 @@
-import React, {useCallback} from 'react';
+import React from 'react';
+
+function MenuItem() {
+  return <>menuItem</>;
+}
+
+function Menu({buttonName}) {
+  const menuItems = {download: 'download', view: 'view', delete: 'delete'};
+  //test
+  console.log('buttonName', buttonName);
+
+  return (
+    <>
+      <button>{buttonName}</button>
+      <ul>
+        {Object.keys(menuItems).map((item, index) => {
+          return <li key={index}>{item}</li>;
+        })}
+      </ul>
+    </>
+  );
+}
 
 function TableElement() {
   const items = [
@@ -16,16 +37,16 @@ function TableElement() {
     }
   ];
   return (
-    <table>
+    <table style={{borderCollapse: 'collapse', border: '1px solid black'}}>
       <tbody>
         {items.map((item, index) => {
           return (
             <tr key={index}>
-              <td>
+              <td style={{border: '1px solid black'}}>
                 <a href="#">{item.file}</a>
               </td>
-              <td>
-                <button>{item.button}</button>
+              <td style={{border: '1px solid black'}}>
+                <Menu buttonName={item.button} />
               </td>
             </tr>
           );
