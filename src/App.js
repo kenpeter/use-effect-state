@@ -1,12 +1,44 @@
 import React, {useCallback} from 'react';
-import AutoComplete from './AutoComplete';
+
+function TableElement() {
+  const items = [
+    {
+      file: 'file1',
+      button: 'button1'
+    },
+    {
+      file: 'file2',
+      button: 'button2'
+    },
+    {
+      file: 'file3',
+      button: 'button3'
+    }
+  ];
+  return (
+    <table>
+      <tbody>
+        {items.map((item, index) => {
+          return (
+            <tr key={index}>
+              <td>
+                <a href="#">{item.file}</a>
+              </td>
+              <td>
+                <button>{item.button}</button>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
 
 function App() {
   return (
     <>
-      <AutoComplete
-        suggestions={['White', 'Black', 'Green', 'Blue', 'Yellow', 'Red']}
-      />
+      <TableElement />
     </>
   );
 }
