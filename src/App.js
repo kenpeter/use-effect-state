@@ -7,17 +7,59 @@ const AppContext = React.createContext({
 function Menu({buttonName, rowIndex}) {
   const [currRowInd, setCurrRowInd] = useState('');
   const [open, setOpen] = useState(false);
+  // active index is 0
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   const menuItems = {download: 'download', view: 'view', delete: 'delete'};
+
+  const buttonIconKeyDown = (event, rowIndex) => {
+    if (event.keyCode === 13) {
+      // Enter pressed
+      console.log('enter is pressed');
+
+      setOpen(!open);
+      setCurrRowInd(rowIndex);
+    } else if (event.keyCode === 9) {
+      // tab away
+      console.log('tab away');
+
+      setOpen(!open);
+      setCurrRowInd('');
+    } else if (event.keyCode === 40) {
+      //test
+      console.log('down arrow');
+
+      // 38 is up arrow
+
+      // No scrolling
+      event.preventDefault();
+
+      // Down arrow
+      // Inbound
+      if (Object.keys(menuItems).length - 1 > activeIndex) {
+        // For future index
+        setActiveIndex(activeIndex + 1);
+        setCurrRowInd(rowIndex);
+      }
+    }
+  };
+
   //test
-  console.log('buttonName', buttonName);
+  console.log('activeIndex', activeIndex);
 
   return (
     <div>
       <button
-        onClick={() => {
+        /*
+        onClick={event => {
           setOpen(!open);
           setCurrRowInd(rowIndex);
+        }}
+        */
+        onKeyDown={event => {
+          //test
+          console.log('parent buttonicon onkeydown: ');
+          buttonIconKeyDown(event, rowIndex);
         }}
       >
         {buttonName}
@@ -74,13 +116,7 @@ function TableElement() {
 }
 
 function App() {
-  // active index is 0
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const appContextObj = {
-    activeIndex: activeIndex,
-    setActiveIndex: setActiveIndex
-  };
+  const appContextObj = {};
 
   return (
     <>
