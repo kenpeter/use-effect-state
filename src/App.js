@@ -24,9 +24,13 @@ function Menu({buttonName, rowIndex}) {
       </button>
 
       {open && rowIndex === currRowInd && (
-        <ul>
+        <ul style={{padding: '5px', margin: '10px', border: '1px solid #ccc'}}>
           {Object.keys(menuItems).map((item, ind) => {
-            return <li key={ind}>{item}</li>;
+            return (
+              <li key={ind} style={{listStyle: 'none', padding: '5px'}}>
+                <button>{item}</button>
+              </li>
+            );
           })}
         </ul>
       )}
