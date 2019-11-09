@@ -1,19 +1,36 @@
-import React, {useState, useEffect, useRef, createRef} from 'react';
+import React, {useState, useEffect, useRef, createRef, useContext} from 'react';
 
-function Menu({buttonName}) {
+const AppContext = React.createContext({
+  name: 'AppContext'
+});
+
+function Menu({buttonName, rowIndex}) {
+  const [currRowInd, setCurrRowInd] = useState('');
+  const [open, setOpen] = useState(false);
+
   const menuItems = {download: 'download', view: 'view', delete: 'delete'};
   //test
   console.log('buttonName', buttonName);
 
   return (
-    <>
-      <button>{buttonName}</button>
-      <ul>
-        {Object.keys(menuItems).map((item, index) => {
-          return <li key={index}>{item}</li>;
-        })}
-      </ul>
-    </>
+    <div>
+      <button
+        onClick={() => {
+          setOpen(!open);
+          setCurrRowInd(rowIndex);
+        }}
+      >
+        {buttonName}
+      </button>
+
+      {open && rowIndex === currRowInd && (
+        <ul>
+          {Object.keys(menuItems).map((item, ind) => {
+            return <li key={ind}>{item}</li>;
+          })}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -42,7 +59,7 @@ function TableElement() {
                 <a href="#">{item.file}</a>
               </td>
               <td style={{border: '1px solid black'}}>
-                <Menu buttonName={item.button} />
+                <Menu buttonName={item.button} rowIndex={index} />
               </td>
             </tr>
           );
@@ -53,14 +70,19 @@ function TableElement() {
 }
 
 function App() {
-  const [open, setOpen] = useState(false);
-  const [uniqueKey, setUniqueKey] = useState('');
   // active index is 0
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const appContextObj = {
+    activeIndex: activeIndex,
+    setActiveIndex: setActiveIndex
+  };
+
   return (
     <>
-      <TableElement />
+      <AppContext.Provider value={appContextObj}>
+        <TableElement />
+      </AppContext.Provider>
     </>
   );
 }
