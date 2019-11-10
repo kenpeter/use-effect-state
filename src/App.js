@@ -58,6 +58,14 @@ function Menu({buttonName, parentRowIndex}) {
     }
   };
 
+  //test
+  console.log(
+    'menuItemRefs.current',
+    menuItemRefs.current,
+    'menuItemActiveIndex',
+    menuItemActiveIndex
+  );
+
   return (
     <div>
       <button
