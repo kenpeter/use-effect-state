@@ -4,22 +4,40 @@ const AppContext = React.createContext({
   name: 'AppContext'
 });
 
-function Menu({buttonName, rowIndex}) {
+const createMenuItemRefs = (items, rowInd) => {
+  // obj
+  let menuItemRefs = {};
+  // loop each
+  for (let i = 0; i < Object.keys(items).length; i++) {
+    // When assign createRef, no current
+    menuItemRefs[rowInd + i] = createRef();
+  }
+  return menuItemRefs;
+};
+
+function Menu({buttonName, parentRowIndex}) {
   const [currRowInd, setCurrRowInd] = useState('');
   const [open, setOpen] = useState(false);
-  // active index is 0
+  // press down key, will get 1st item which at index 0
   const [menuItemActiveIndex, setMenuItemActiveIndex] = useState(-1);
 
   const menuItems = {download: 'download', view: 'view', delete: 'delete'};
+  const menuItemRefs = useRef(createMenuItemRefs(menuItems, parentRowIndex));
+
+  useEffect(() => {
+    if (open && menuItemActiveIndex >= 0 && parentRowIndex !== '') {
+      menuItemRefs.current[parentRowIndex + menuItemActiveIndex].focus();
+    }
+  }, [menuItemActiveIndex, open, parentRowIndex]);
 
   // on the button level
-  const buttonIconKeyDown = (event, rowIndex) => {
+  const buttonIconKeyDown = (event, parentRowIndex) => {
     if (event.keyCode === 13) {
       // Enter pressed
       console.log('enter is pressed');
 
       setOpen(!open);
-      setCurrRowInd(rowIndex);
+      setCurrRowInd(parentRowIndex);
     } else if (event.keyCode === 9) {
       // tab away
       console.log('tab away');
@@ -40,46 +58,47 @@ function Menu({buttonName, rowIndex}) {
     }
   };
 
-  // * rowIndex is table row index pass down
-  // * currRowInd is which button we click no that row
-  // * ind is menu item index
   return (
     <div>
       <button
-        /*
-        onClick={event => {
-          setOpen(!open);
-          setCurrRowInd(rowIndex);
-        }}
-        */
         onKeyDown={event => {
           //test
           console.log('parent buttonicon onkeydown: ');
-          buttonIconKeyDown(event, rowIndex);
+          buttonIconKeyDown(event, parentRowIndex);
         }}
       >
         {buttonName}
       </button>
 
-      {open && rowIndex === currRowInd && (
+      {open && parentRowIndex === currRowInd && (
         <ul style={{padding: '5px', margin: '10px', border: '1px solid #ccc'}}>
-          {Object.keys(menuItems).map((item, ind) => {
-            if (ind === menuItemActiveIndex)
+          {Object.keys(menuItems).map((item, itemIndex) => {
+            if (itemIndex === menuItemActiveIndex)
               return (
                 <li
-                  key={ind}
+                  key={itemIndex}
                   style={{
                     listStyle: 'none',
                     padding: '5px',
                     backgroundColor: 'blue'
                   }}
+                  // put a ref
+                  ref={element =>
+                    (menuItemRefs.current[parentRowIndex + itemIndex] = element)
+                  }
                 >
                   <button>{item}</button>
                 </li>
               );
             else
               return (
-                <li key={ind} style={{listStyle: 'none', padding: '5px'}}>
+                <li
+                  key={itemIndex}
+                  style={{listStyle: 'none', padding: '5px'}}
+                  ref={element =>
+                    (menuItemRefs.current[parentRowIndex + itemIndex] = element)
+                  }
+                >
                   <button>{item}</button>
                 </li>
               );
@@ -115,7 +134,7 @@ function TableElement() {
                 <a href="#">{item.file}</a>
               </td>
               <td style={{border: '1px solid black'}}>
-                <Menu buttonName={item.button} rowIndex={index} />
+                <Menu buttonName={item.button} parentRowIndex={index} />
               </td>
             </tr>
           );
