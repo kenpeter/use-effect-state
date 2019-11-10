@@ -8,10 +8,11 @@ function Menu({buttonName, rowIndex}) {
   const [currRowInd, setCurrRowInd] = useState('');
   const [open, setOpen] = useState(false);
   // active index is 0
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [menuItemActiveIndex, setMenuItemActiveIndex] = useState(-1);
 
   const menuItems = {download: 'download', view: 'view', delete: 'delete'};
 
+  // on the button level
   const buttonIconKeyDown = (event, rowIndex) => {
     if (event.keyCode === 13) {
       // Enter pressed
@@ -34,19 +35,14 @@ function Menu({buttonName, rowIndex}) {
       // No scrolling
       event.preventDefault();
 
-      // Down arrow
-      // Inbound
-      if (Object.keys(menuItems).length - 1 > activeIndex) {
-        // For future index
-        setActiveIndex(activeIndex + 1);
-        setCurrRowInd(rowIndex);
-      }
+      // set to 1st item in 0 index
+      setMenuItemActiveIndex(0);
     }
   };
 
-  //test
-  console.log('activeIndex', activeIndex);
-
+  // * rowIndex is table row index pass down
+  // * currRowInd is which button we click no that row
+  // * ind is menu item index
   return (
     <div>
       <button
@@ -68,11 +64,25 @@ function Menu({buttonName, rowIndex}) {
       {open && rowIndex === currRowInd && (
         <ul style={{padding: '5px', margin: '10px', border: '1px solid #ccc'}}>
           {Object.keys(menuItems).map((item, ind) => {
-            return (
-              <li key={ind} style={{listStyle: 'none', padding: '5px'}}>
-                <button>{item}</button>
-              </li>
-            );
+            if (ind === menuItemActiveIndex)
+              return (
+                <li
+                  key={ind}
+                  style={{
+                    listStyle: 'none',
+                    padding: '5px',
+                    backgroundColor: 'blue'
+                  }}
+                >
+                  <button>{item}</button>
+                </li>
+              );
+            else
+              return (
+                <li key={ind} style={{listStyle: 'none', padding: '5px'}}>
+                  <button>{item}</button>
+                </li>
+              );
           })}
         </ul>
       )}
