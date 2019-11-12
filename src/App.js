@@ -1,166 +1,29 @@
-import React, {useState, useEffect, useRef, createRef, useContext} from 'react';
+import React from 'react';
+import styled from 'styled-components';
 
-const AppContext = React.createContext({
-  name: 'AppContext'
-});
+const StyledTextArea = styled.textarea`
+  border: 1px solid #ccc;
+  width: 500px;
+`;
 
-const createMenuItemRefs = (items, rowInd) => {
-  // obj
-  let menuItemRefs = {};
-  // loop each
-  for (let i = 0; i < Object.keys(items).length; i++) {
-    // When assign createRef, no current
-    menuItemRefs[rowInd + i] = createRef();
-  }
-  return menuItemRefs;
-};
-
-function Menu({buttonName, parentRowIndex}) {
-  const [currRowInd, setCurrRowInd] = useState('');
-  const [open, setOpen] = useState(false);
-  // press down key, will get 1st item which at index 0
-  const [menuItemActiveIndex, setMenuItemActiveIndex] = useState(-1);
-
-  const menuItems = {download: 'download', view: 'view', delete: 'delete'};
-  const menuItemRefs = useRef(createMenuItemRefs(menuItems, parentRowIndex));
-
-  useEffect(() => {
-    if (open && menuItemActiveIndex >= 0 && parentRowIndex !== '') {
-      menuItemRefs.current[parentRowIndex + menuItemActiveIndex].focus();
-    }
-  }, [menuItemActiveIndex, open, parentRowIndex]);
-
-  // on the button level
-  const buttonIconKeyDown = (event, parentRowIndex) => {
-    if (event.keyCode === 13) {
-      // Enter pressed
-      console.log('enter is pressed');
-
-      setOpen(!open);
-      setCurrRowInd(parentRowIndex);
-    } else if (event.keyCode === 9) {
-      // tab away
-      console.log('tab away');
-
-      setOpen(!open);
-      setCurrRowInd('');
-    } else if (event.keyCode === 40) {
-      //test
-      console.log('down arrow');
-
-      // 38 is up arrow
-
-      // No scrolling
-      event.preventDefault();
-
-      // set to 1st item in 0 index
-      setMenuItemActiveIndex(0);
-    }
-  };
-
-  //test
-  console.log(
-    'menuItemRefs.current',
-    menuItemRefs.current,
-    'menuItemActiveIndex',
-    menuItemActiveIndex
-  );
-
+export function FuncTextArea({onChange = () => {}}) {
   return (
     <div>
-      <button
-        onKeyDown={event => {
-          //test
-          console.log('parent buttonicon onkeydown: ');
-          buttonIconKeyDown(event, parentRowIndex);
-        }}
-      >
-        {buttonName}
-      </button>
-
-      {open && parentRowIndex === currRowInd && (
-        <ul style={{padding: '5px', margin: '10px', border: '1px solid #ccc'}}>
-          {Object.keys(menuItems).map((item, itemIndex) => {
-            if (itemIndex === menuItemActiveIndex)
-              return (
-                <li
-                  key={itemIndex}
-                  style={{
-                    listStyle: 'none',
-                    padding: '5px',
-                    backgroundColor: 'blue'
-                  }}
-                  // put a ref
-                  ref={element =>
-                    (menuItemRefs.current[parentRowIndex + itemIndex] = element)
-                  }
-                >
-                  <button>{item}</button>
-                </li>
-              );
-            else
-              return (
-                <li
-                  key={itemIndex}
-                  style={{listStyle: 'none', padding: '5px'}}
-                  ref={element =>
-                    (menuItemRefs.current[parentRowIndex + itemIndex] = element)
-                  }
-                >
-                  <button>{item}</button>
-                </li>
-              );
-          })}
-        </ul>
-      )}
+      <h1>hi</h1>
+      <StyledTextArea onChange={onChange} />
     </div>
   );
 }
 
-function TableElement() {
-  const items = [
-    {
-      file: 'file1',
-      button: 'button1'
-    },
-    {
-      file: 'file2',
-      button: 'button2'
-    },
-    {
-      file: 'file3',
-      button: 'button3'
-    }
-  ];
-  return (
-    <table style={{borderCollapse: 'collapse', border: '1px solid black'}}>
-      <tbody>
-        {items.map((item, index) => {
-          return (
-            <tr key={index}>
-              <td style={{border: '1px solid black'}}>
-                <a href="#">{item.file}</a>
-              </td>
-              <td style={{border: '1px solid black'}}>
-                <Menu buttonName={item.button} parentRowIndex={index} />
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
 function App() {
-  const appContextObj = {};
+  const onChange = () => {
+    console.log('it works');
+  };
 
   return (
-    <>
-      <AppContext.Provider value={appContextObj}>
-        <TableElement />
-      </AppContext.Provider>
-    </>
+    <div>
+      <FuncTextArea onChange={onChange} />
+    </div>
   );
 }
 

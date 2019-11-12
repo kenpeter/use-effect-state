@@ -1,9 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import {FuncTextArea} from './App';
+import {configure, mount} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+configure({adapter: new Adapter()});
+
+it('test onchange mock', () => {
+  const onChange = jest.fn();
+  const component = mount(<FuncTextArea onChange={onChange} value="hi" />);
+  component.find('textarea').simulate('change');
+  expect(onChange).toBeCalledWith('hi');
 });
