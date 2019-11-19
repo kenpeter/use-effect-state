@@ -5,7 +5,7 @@ import {useDispatch, useMappedState} from 'redux-react-hook';
 function App() {
   useEffect(() => {
     dispatch({type: 'ITEMS_GET'});
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const mapState = useCallback(
     state => ({
@@ -17,7 +17,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  return <div>bla</div>;
+  return <div>{items.title}</div>;
 }
 
 export default App;
