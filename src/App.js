@@ -1,30 +1,23 @@
-import React from 'react';
-import styled from 'styled-components';
-
-const StyledTextArea = styled.textarea`
-  border: 1px solid #ccc;
-  width: 500px;
-`;
-
-export function FuncTextArea({onChange = () => {}}) {
-  return (
-    <div>
-      <h1>hi</h1>
-      <StyledTextArea onChange={onChange} />
-    </div>
-  );
-}
+// https://codesandbox.io/s/qxqq75764
+import React, {useCallback, useEffect} from 'react';
+import {useDispatch, useMappedState} from 'redux-react-hook';
 
 function App() {
-  const onChange = () => {
-    console.log('it works');
-  };
+  useEffect(() => {
+    dispatch({type: 'ITEMS_GET'});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return (
-    <div>
-      <FuncTextArea onChange={onChange} />
-    </div>
+  const mapState = useCallback(
+    state => ({
+      items: state.items
+    }),
+    []
   );
+  const {items} = useMappedState(mapState);
+
+  const dispatch = useDispatch();
+
+  return <div>bla</div>;
 }
 
 export default App;
