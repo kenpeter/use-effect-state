@@ -5,8 +5,11 @@ import Adapter from 'enzyme-adapter-react-16';
 import configureStore from 'redux-mock-store';
 import {StoreContext} from 'redux-react-hook';
 import {cleanup} from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
+import {act} from 'react-dom/test-utils';
+import axios from 'axios';
 
-let setUp;
+let setUp, element;
 const mockStore = configureStore();
 configure({adapter: new Adapter()});
 afterEach(cleanup);
@@ -28,7 +31,14 @@ describe('App', () => {
   });
 
   it('test useEffect', () => {
-    const element = setUp();
-    expect(element.find(App).exists()).toEqual(true);
+    const mock = new MockAdapter(axios);
+    mock.onGet('/path/to/api').reply(200, {});
+
+    act(() => {
+      element = setUp();
+    });
+
+    // component debug
+    console.log(element.debug());
   });
 });

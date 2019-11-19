@@ -17,7 +17,8 @@ function App() {
 
   const dispatch = useDispatch();
 
-  return <div>{items.title}</div>;
+  // {items.title}
+  return <div>bla</div>;
 }
 
 export default App;
