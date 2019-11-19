@@ -1,4 +1,3 @@
-// https://codesandbox.io/s/qxqq75764
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useMappedState} from 'redux-react-hook';
 
