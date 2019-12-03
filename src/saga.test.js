@@ -27,15 +27,36 @@ it('Showcases the tester API', async () => {
   const sagaTester = new SagaTester({
     initialState,
     reducers: {reducer: reducer},
-    middlewares: [middleware],
+    middlewares: [],
     options
   });
 
   sagaTester.start(getItemsSaga);
 
-  // Check that state was populated with initialState
-  // * init state is set
+  // init
   expect(sagaTester.getState()).toEqual(initialState);
+
+  sagaTester.dispatch({type: 'ITEMS_GET'});
+  await sagaTester.waitFor('ITEMS_GET_SUCCESS');
+
+  /*
+  sagaTester.getCalledActions().forEach(action => {
+    // action.meta === ....
+    expect(action.meta).toEqual(middlewareMeta);
+  });
+  */
+
+  expect(sagaTester.getState()).toEqual({
+    reducer: {
+      items: {
+        completed: false,
+        id: 1,
+        title: 'delectus aut autem',
+        userId: 1
+      },
+      loading: false
+    }
+  });
 
   /*
   // Dispatch the event to start the saga
