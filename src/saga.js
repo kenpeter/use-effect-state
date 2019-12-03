@@ -1,6 +1,6 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 
-export function* getItems() {
+function* getItems() {
   const endpoint = 'https://jsonplaceholder.typicode.com/todos/1';
   const response = yield call(fetch, endpoint);
   const items = yield response.json();
