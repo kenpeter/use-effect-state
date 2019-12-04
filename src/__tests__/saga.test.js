@@ -15,7 +15,7 @@ const options = {onError: console.error.bind(console)};
 
 describe('Saga', () => {
   beforeEach(() => {
-    mockAxios.get.mockImplementationOnce(() => Promise.resolve({}));
+    mockAxios.get = jest.fn().mockResolvedValue({key: 'val'});
   });
 
   afterEach(() => {
@@ -33,6 +33,9 @@ describe('Saga', () => {
     sagaTester.start(getItemsSaga);
 
     sagaTester.dispatch({type: 'ITEMS_GET'});
+
     await sagaTester.waitFor('ITEMS_GET_SUCCESS');
+
+    expect(sagaTester.getState()).toEqual({key: 'val'});
   });
 });
