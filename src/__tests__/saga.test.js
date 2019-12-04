@@ -15,7 +15,7 @@ const options = {onError: console.error.bind(console)};
 
 describe('Saga', () => {
   beforeEach(() => {
-    mockAxios.get = jest.fn().mockResolvedValue({key: 'val'});
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve({key: 'val'}));
   });
 
   afterEach(() => {
